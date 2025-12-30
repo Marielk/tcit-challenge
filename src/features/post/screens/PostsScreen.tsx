@@ -1,34 +1,34 @@
-import { useAppSelector } from '@/src/store/hooks';
 import React from 'react';
-import { Button, FlatList, Text, View } from 'react-native';
-import { useSetPostsHook } from '../hooks/setPosts';
-import { selectFilteredPosts } from '../store/postSelectors';
+import { View } from 'react-native';
+import { tokens } from '../../../../src/theme/tokens';
+import PostFilterBar from '../components/PostFilter';
+import PostForm from '../components/PostForm';
+import PostList from '../components/PostList';
+import { usePostsController } from '../hooks/usePostsController';
+import { useSetPostsHook } from '../hooks/useSetPosts';
+import { PostAddedPayload, PostDeletedPayload, PostFilterPayload } from '../model/postStore.types';
 
 export default function PostsScreen() {
-  const posts = useAppSelector(selectFilteredPosts);
   const { status, error } = useSetPostsHook();
+  const { posts, actions } = usePostsController();
+
+  const onCreate = (postInfo: PostAddedPayload) => {
+    actions.createPost(postInfo);
+  };
+
+  const onDelete = (postInfo: PostDeletedPayload) => {
+    actions.deletePost(postInfo)
+  };
+
+  const onFilter = (filter: PostFilterPayload) => {
+    actions.setFilter(filter);
+  };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={<Text>No hay posts</Text>}
-        renderItem={({ item }) => (
-          <View style={{ borderWidth: 1, padding: 10, marginBottom: 8 }}>
-            <Text style={{ fontWeight: '700' }}>{item.name}</Text>
-            <Text>{item.description}</Text>
-            <Text style={{ fontSize: 12, color: '#666' }}>{item.id}</Text>
-
-            <View style={{ marginTop: 8 }}>
-              <Button
-                title="Eliminar"
-                onPress={() => { }}
-              />
-            </View>
-          </View>
-        )}
-      />
+    <View style={{ flex: 1, paddingTop: 200, paddingHorizontal: tokens.spacing.lg }}>
+      <PostFilterBar onSearch={(payload) => onFilter(payload)} />
+      <PostList posts={posts} onDelete={(payload) => onDelete(payload)} />
+      <PostForm onCreate={(payload) => onCreate(payload)} />
     </View>
   );
 }
