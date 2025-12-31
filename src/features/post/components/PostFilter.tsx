@@ -22,6 +22,7 @@ export default function PostFilterBar({ onSearch }: FilterProps) {
         onChangeText={(text) => setInputValue(text)}
         placeholder={filterBar.inputPlaceHolder}
         style={{ marginRight: tokens.spacing.lg }}
+        onSubmitEditing={handleSearch}
       />
       <OutlinedButton title={filterBar.primary} onPress={handleSearch} />
     </View>

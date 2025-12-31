@@ -12,7 +12,7 @@ export default function PostForm({ onCreate }: PostFormProps) {
   const [description, setDescription] = useState('');
 
   const isDisabled = useMemo(() => {
-    return name.trim().length < 2 || description.trim().length < 5;
+    return name.trim().length < 1 || description.trim().length < 1;
   }, [name, description]);
 
   const handleSubmit = () => {
@@ -24,7 +24,7 @@ export default function PostForm({ onCreate }: PostFormProps) {
   };
 
   return (
-    <View style={[sharedStyles.row, { paddingTop: tokens.spacing.lg }]} accessibilityRole="search">
+    <View style={[sharedStyles.row, { paddingTop: tokens.spacing.lg }]}>
       <TextField
         value={name}
         onChangeText={setName}
